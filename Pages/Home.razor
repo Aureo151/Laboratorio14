@@ -1,0 +1,187 @@
+﻿@page "/"
+@using Models
+@using Components 
+
+@inject Blazored.LocalStorage.ISyncLocalStorageService localStorage
+@inject NavigationManager NavigationManager
+
+<h1>Ingreso de Animales</h1>
+
+
+<div class="col col-4">
+			<label for="tipo" class="form-label">Tipo</label>
+	<InputSelect id="tipo" class="form-select" @bind-Value="EspecieSeleccionada">
+				<option value="Ave">Ave</option>
+				<option value="Serpiente">Serpiente</option>
+			</InputSelect>
+</div>
+@if (EspecieSeleccionada == "Ave")
+{
+	ave.Tipo = "Ave";
+	<EditForm Model="@ave" OnValidSubmit="@GuardarAve">
+		<DataAnnotationsValidator />
+		<ValidationSummary />
+
+		<div class="container mt-4">
+			<div class="row mt-3">
+				<div class="col col-4">
+					<label for="nombre" class="form-label">Nombre</label>
+					<InputText id="nombre" class="form-control" @bind-Value="ave.Nombre" />
+					<ValidationMessage For="() => ave.Nombre" />
+				</div>
+				<div class="col col-4">
+					<label for="especie" class="form-label">Especie</label>
+					<InputText id="especie" class="form-control" @bind-Value="ave.Especie" />
+					<ValidationMessage For="() => ave.Especie" />
+				</div>
+				
+			</div>
+			<div class="row mt-3">
+				<div class="col col-4">
+					<label for="tipoalimentacion" class="form-label">TIpo de Alimentacion</label>
+					<InputText id="tipoalimentacion" class="form-control" @bind-Value="ave.Tipo_Alimentacion" />
+					<ValidationMessage For="() => ave.Tipo_Alimentacion" />
+				</div>
+				<div class="col col-4">
+					<label for="tiempovida" class="form-label">Tiempo de Vida</label>
+					<InputNumber id="tiempovida" class="form-control" @bind-Value="ave.TiempoVida" />
+					<ValidationMessage For="() => ave.TiempoVida" />
+				</div>
+			</div>
+			
+		</div>
+		<div class="row mt-3">			
+			<div class="col col-4">
+				<InputSelect id="vuela" class="form-select" @bind-Value="ave.Vuela">
+					<option value="">El ave vuela?</option>
+					<option value="Si">Si</option>
+					<option value="No">No</option>
+				</InputSelect>
+				<ValidationMessage For="() => ave.Vuela" />
+			</div>
+			<div class="col col-4">
+				<label for="longitud" class="form-label">Longitud</label>
+				<InputNumber id="longitud" class="form-control" @bind-Value="ave.Longitud" />
+				<ValidationMessage For="() => ave.Longitud" />
+			</div>		
+		</div>
+		<div class="col">
+			<button class="btn btn-secondary" type="submit">Guardar</button>
+		</div>
+	</EditForm>
+}
+@if (EspecieSeleccionada == "Serpiente")
+{
+	serpiente.Tipo = "Serpiente";
+	<EditForm Model="@serpiente" OnValidSubmit="@GuardarSerpiente">
+		<DataAnnotationsValidator />
+		<ValidationSummary />
+
+		<div class="container mt-4">
+			<div class="row mt-3">
+				<div class="col col-4">
+					<label for="nombre" class="form-label">Nombre</label>
+					<InputText id="nombre" class="form-control" @bind-Value="serpiente.Nombre" />
+					<ValidationMessage For="() => serpiente.Nombre" />
+				</div>
+				<div class="col col-4">
+					<label for="especie" class="form-label">Especie</label>
+					<InputText id="especie" class="form-control" @bind-Value="serpiente.Especie" />
+					<ValidationMessage For="() => serpiente.Especie" />
+				</div>
+			</div>
+			<div class="row mt-3">
+				<div class="col col-4">
+					<label for="tipoalimentacion" class="form-label">TIpo de Alimentacion</label>
+					<InputText id="tipoalimentacion" class="form-control" @bind-Value="serpiente.Tipo_Alimentacion" />
+					<ValidationMessage For="() => serpiente.Tipo_Alimentacion" />
+				</div>
+				<div class="col col-4">
+					<label for="tiempovida" class="form-label">Tiempo de Vida</label>
+					<InputNumber id="tiempovida" class="form-control" @bind-Value="serpiente.TiempoVida" />
+					<ValidationMessage For="() => serpiente.TiempoVida" />
+				</div>
+			</div>
+
+		</div>
+		<div class="row mt-3">
+			<div class="col col-4">
+				<InputSelect id="vuela" class="form-select" @bind-Value="serpiente.EsVenenosa">
+					<option value="">La serpiente es venenosa?</option>
+					<option value="Si">Si</option>
+					<option value="No">No</option>
+				</InputSelect>
+				<ValidationMessage For="() => serpiente.EsVenenosa" />
+			</div>
+			<div class="col col-4">
+				<label for="longitud" class="form-label">Longitud</label>
+				<InputNumber id="longitud" class="form-control" @bind-Value="serpiente.Longitud" />
+				<ValidationMessage For="() => serpiente.Longitud" />
+			</div>
+		</div>
+		<div class="col">
+			<button class="btn btn-secondary" type="submit">Guardar</button>
+		</div>
+	</EditForm>
+}
+
+
+@code{
+	private string EspecieSeleccionada = "Ave";
+	private Animal animal = new Animal();
+	private List<Animal> animales = new List<Animal>();
+
+	private Ave ave = new Ave();
+	private List<Ave> aves = new List<Ave>();
+
+	private Serpiente serpiente = new Serpiente();
+	private List<Serpiente> serpientes = new List<Serpiente>();
+
+	private Animal ConvertirAnimalBase(Animal animalEspecifico)
+	{
+		return new Animal
+			{
+				Tipo = animalEspecifico.Tipo,
+				Nombre = animalEspecifico.Nombre,
+				Especie = animalEspecifico.Especie,
+				Tipo_Alimentacion = animalEspecifico.Tipo_Alimentacion,
+				TiempoVida = animalEspecifico.TiempoVida,
+
+			};
+
+	}
+
+	private void GuardarAve()
+	{
+		aves.Add(ave);
+
+		var animalBase = ConvertirAnimalBase(ave);
+		animales.Add(animalBase);
+
+		localStorage.SetItem("aves", ave);
+		localStorage.SetItem("animales", animales);
+		
+		NavigationManager.NavigateTo("/listado-aves");
+
+	}
+
+	private void GuardarSerpiente()
+	{
+		serpientes.Add(serpiente);
+		var animalBase = ConvertirAnimalBase(serpiente);
+		animales.Add(animalBase);
+		localStorage.SetItem("serpientes", serpiente);
+		localStorage.SetItem("animales", animales);
+		NavigationManager.NavigateTo("/listado-serpientes");
+	}
+
+
+	protected override void OnInitialized()
+	{
+		aves = localStorage.GetItem<List<Ave>>("aves") ?? new();
+		serpientes = localStorage.GetItem<List<Serpiente>>("serpientes") ?? new();
+		animales = localStorage.GetItem<List<Animal>>("animales") ?? new();
+
+	}
+
+}
