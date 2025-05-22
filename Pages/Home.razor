@@ -52,8 +52,8 @@
 		</div>
 		<div class="row mt-3">			
 			<div class="col col-4">
+				<label for="vuela" class="form-label">Vuela?</label>
 				<InputSelect id="vuela" class="form-select" @bind-Value="ave.Vuela">
-					<option value="">El ave vuela?</option>
 					<option value="Si">Si</option>
 					<option value="No">No</option>
 				</InputSelect>
@@ -106,11 +106,12 @@
 		</div>
 		<div class="row mt-3">
 			<div class="col col-4">
-				<InputSelect id="vuela" class="form-select" @bind-Value="serpiente.EsVenenosa">
-					<option value="">La serpiente es venenosa?</option>
+				<label for="esvenenosa" class="form-label">Es Venenosa?</label>
+				<InputSelect id="esvenenosa" class="form-select" @bind-Value="serpiente.EsVenenosa">
 					<option value="Si">Si</option>
 					<option value="No">No</option>
 				</InputSelect>
+					
 				<ValidationMessage For="() => serpiente.EsVenenosa" />
 			</div>
 			<div class="col col-4">
@@ -158,7 +159,7 @@
 		var animalBase = ConvertirAnimalBase(ave);
 		animales.Add(animalBase);
 
-		localStorage.SetItem("aves", ave);
+		localStorage.SetItem("aves", aves);
 		localStorage.SetItem("animales", animales);
 		
 		NavigationManager.NavigateTo("/listado-aves");
@@ -170,7 +171,7 @@
 		serpientes.Add(serpiente);
 		var animalBase = ConvertirAnimalBase(serpiente);
 		animales.Add(animalBase);
-		localStorage.SetItem("serpientes", serpiente);
+		localStorage.SetItem("serpientes", serpientes);
 		localStorage.SetItem("animales", animales);
 		NavigationManager.NavigateTo("/listado-serpientes");
 	}
@@ -179,6 +180,7 @@
 	protected override void OnInitialized()
 	{
 		aves = localStorage.GetItem<List<Ave>>("aves") ?? new();
+
 		serpientes = localStorage.GetItem<List<Serpiente>>("serpientes") ?? new();
 		animales = localStorage.GetItem<List<Animal>>("animales") ?? new();
 
